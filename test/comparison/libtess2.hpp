@@ -50,9 +50,9 @@ public:
              for (int i = 0; i < elementCount; i++) {
                 const TESSindex *group = &elements[i * verticesPerTriangle];
                 if (group[0] != TESS_UNDEF && group[1] != TESS_UNDEF && group[2] != TESS_UNDEF) {
-                    indexData.push_back(group[0]);
-                    indexData.push_back(group[1]);
-                    indexData.push_back(group[2]);
+                    indexData.push_back(static_cast<uint32_t>(group[0]));
+                    indexData.push_back(static_cast<uint32_t>(group[1]));
+                    indexData.push_back(static_cast<uint32_t>(group[2]));
                 }
             }
         }

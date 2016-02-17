@@ -136,7 +136,7 @@ void Earcut<N>::operator()(const Polygon& points) {
     double x;
     double y;
     size = 0;
-    int threshold = 80;
+    int64_t threshold = 80;
     std::size_t len = 0;
 
     for (size_t i = 0; threshold >= 0 && i < points.size(); i++) {
@@ -184,8 +184,8 @@ typename Earcut<N>::Node*
 Earcut<N>::linkedList(const Ring& points, const bool clockwise) {
     using Point = typename Ring::value_type;
     double sum = 0;
-    const int len = points.size();
-    int i, j;
+    const N len = static_cast<N>(points.size());
+    N i, j;
     Point p1, p2;
     Node* last = nullptr;
 
@@ -204,7 +204,7 @@ Earcut<N>::linkedList(const Ring& points, const bool clockwise) {
     if (clockwise == (sum > 0)) {
         for (i = 0; i < len; i++) last = insertNode(vertices + i, points[i], last);
     } else {
-        for (i = len - 1; i >= 0; i--) last = insertNode(vertices + i, points[i], last);
+        for (i = len; i-- > 0;) last = insertNode(vertices + i, points[i], last);
     }
 
     vertices += len;
@@ -652,8 +652,8 @@ bool Earcut<N>::equals(const Node* p1, const Node* p2) {
 // check if two segments intersect
 template <typename N>
 bool Earcut<N>::intersects(const Node* p1, const Node* q1, const Node* p2, const Node* q2) {
-    return area(p1, q1, p2) > 0 != area(p1, q1, q2) > 0 &&
-           area(p2, q2, p1) > 0 != area(p2, q2, q1) > 0;
+    return (area(p1, q1, p2) > 0) != (area(p1, q1, q2) > 0) &&
+           (area(p2, q2, p1) > 0) != (area(p2, q2, q1) > 0);
 }
 
 // check if a polygon diagonal intersects any polygon segments

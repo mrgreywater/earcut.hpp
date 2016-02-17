@@ -11,8 +11,11 @@
 template <typename Point>
 double triangleArea(const Point &a, const Point &b, const Point &c) {
     using namespace mapbox::util;
-    return double(std::abs((nth<0, Point>::get(a) - nth<0, Point>::get(c)) * (nth<1, Point>::get(b) - nth<1, Point>::get(a)) -
-                           (nth<0, Point>::get(a) - nth<0, Point>::get(b)) * (nth<1, Point>::get(c) - nth<1, Point>::get(a)))) / 2;
+    const auto dxca = nth<0, Point>::get(a) - nth<0, Point>::get(c);
+    const auto dxba = nth<0, Point>::get(a) - nth<0, Point>::get(b);
+    const auto dyab = nth<1, Point>::get(b) - nth<1, Point>::get(a);
+    const auto dyac = nth<1, Point>::get(c) - nth<1, Point>::get(a);
+    return double(std::abs(dxca * dyab - dxba * dyac)) / 2.0;
 }
 
 template <typename Vertices, typename Indices>
@@ -57,7 +60,7 @@ std::string formatPercent(double num) {
 }
 
 template <typename Coord, typename Polygon>
-void areaTest(const char *name, const Polygon &polygon, int expectedTriangles = 0, double earcutDeviation = 1e-14, double libtess2Deviation = 0.000001) {
+void areaTest(const char *name, const Polygon &polygon, unsigned int expectedTriangles = 0, double earcutDeviation = 1e-14, double libtess2Deviation = 0.000001) {
     Tap::Test t(name);
 
     const auto expectedArea = polygonArea(polygon);
